@@ -2,9 +2,24 @@ import { motion } from "motion/react";
 import { Mail, Github, Linkedin, ArrowUpRight } from "lucide-react";
 
 const links = [
-  { icon: Mail, label: "Email", value: "Joud.nbk@gmail.com", href: "mailto:Joud.nbk@gmail.com" },
-  { icon: Github, label: "GitHub", value: "github.com/joudnaif", href: "github.com/joudnaif" },
-  { icon: Linkedin, label: "LinkedIn", value: "https://www.linkedin.com/in/Joudbakarman", href: "https://www.linkedin.com/in/Joudbakarman" },
+  {
+    icon: Mail,
+    label: "Email",
+    value: "Joud.nbk@gmail.com",
+    href: "mailto:Joud.nbk@gmail.com",
+  },
+  {
+    icon: Github,
+    label: "GitHub",
+    value: "github.com/joudnaif",
+    href: "https://github.com/joudnaif",
+  },
+  {
+    icon: Linkedin,
+    label: "LinkedIn",
+    value: "linkedin.com/in/joudbakarman",
+    href: "https://www.linkedin.com/in/joudbakarman",
+  },
 ];
 
 export function ContactSection() {
@@ -56,6 +71,8 @@ export function ContactSection() {
               <motion.a
                 key={link.label}
                 href={link.href}
+                target={link.label === "Email" ? undefined : "_blank"}
+                rel={link.label === "Email" ? undefined : "noopener noreferrer"}
                 initial={{ opacity: 0, x: 20 }}
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true }}
