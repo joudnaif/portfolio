@@ -1,6 +1,6 @@
 import { motion, AnimatePresence } from "motion/react";
-import { useState } from "react";
-import { ArrowUpRight, ExternalLink, ChevronLeft, ChevronRight } from "lucide-react";
+import { useState, useEffect, useRef } from "react";
+import { ExternalLink, ChevronLeft, ChevronRight } from "lucide-react";
 
 const projects = [
   {
@@ -48,54 +48,58 @@ const projects = [
     url: "https://www.mdpi.com/2075-4418/16/11/1745",
     screenshots: [
       "images/Paper.png",
-        ],
+    ],
   },
   {
     id: 4,
     title: "Smart Refrigerator System",
-    category: "IoT & Artificial Intelligence (Conceptual Design)",
-    year: "C4B88A",
+    category: "IoT & AI (Conceptual Design)",
+    year: "2025",
     description:
-      "Designed a theoretical Smart Refrigerator System that integrates IoT, AI, and cloud technologies to automate food inventory tracking, predict expiration dates, and reduce household food waste. The project focused on system architecture, technology integration, and feasibility analysis rather than physical implementation.",
+      "Designed a theoretical Smart Refrigerator System that integrates IoT, AI, and cloud technologies to automate food inventory tracking, predict expiration dates, and reduce household food waste.",
     tech: ["ESP32", "Jetson Nano", "YOLOv8", "Flutter", "AWS"],
     color: "#C4B88A",
     highlight: false,
     url: "images/IT481_paper.pdf",
     screenshots: [
-      "/images/Fridge1.png",
+     "/images/Fridge1.png",
       "/images/Fridge2.jpg",
     ],
   },
-   {
+  {
     id: 5,
     title: "Depression Prediction System",
-    category: "Artificial Intelligence & Machine Learning",
+    category: "AI & Machine Learning",
     year: "2024",
     description:
-      "Developed a machine learning system to analyze factors associated with depression and predict outcomes using real-world datasets. The project involved data preprocessing, exploratory data analysis, feature engineering, model training, and performance evaluation to identify patterns and support data-driven insights.",
-      tech: [
-        "Python",
-        "Machine Learning",
-        "Pandas",
-        "NumPy",
-        "Scikit-learn",
-        "Matplotlib"
-      ],
+      "Developed a machine learning system to analyze factors associated with depression and predict outcomes using real-world datasets. Involved data preprocessing, exploratory analysis, feature engineering, and model evaluation.",
+    tech: ["Python", "Machine Learning", "Pandas", "NumPy", "Scikit-learn", "Matplotlib"],
     color: "#6E8F7A",
     highlight: false,
     url: "https://github.com/joudnaif/IT326-project-depression",
     screenshots: [
       "/images/Dep1.png",
       "/images/Dep2.png",
-
     ],
-  }
+  },
 ];
+
+// Returns true if the device supports hover (laptop/desktop/iPad with keyboard)
+function useHoverDevice() {
+  const [canHover, setCanHover] = useState(false);
+  useEffect(() => {
+    const mq = window.matchMedia("(hover: hover) and (pointer: fine)");
+    setCanHover(mq.matches);
+    const handler = (e: MediaQueryListEvent) => setCanHover(e.matches);
+    mq.addEventListener("change", handler);
+    return () => mq.removeEventListener("change", handler);
+  }, []);
+  return canHover;
+}
 
 function BrowserChrome({ children }: { children: React.ReactNode }) {
   return (
     <div className="rounded-xl overflow-hidden" style={{ boxShadow: "0 8px 32px rgba(0,0,0,0.25)" }}>
-      {/* Browser bar */}
       <div className="flex items-center gap-1.5 px-3 py-2" style={{ background: "rgba(255,255,255,0.12)" }}>
         <div className="w-2 h-2 rounded-full bg-red-400/70" />
         <div className="w-2 h-2 rounded-full bg-yellow-400/70" />
@@ -107,10 +111,15 @@ function BrowserChrome({ children }: { children: React.ReactNode }) {
   );
 }
 
-function ProjectCard({ project, index }: { project: typeof projects[0]; index: number }) {
-  const [hovered, setHovered] = useState(false);
-  const [imgIndex, setImgIndex] = useState(0);
-
+function ScreenshotOverlay({
+  project,
+  imgIndex,
+  setImgIndex,
+}: {
+  project: typeof projects[0];
+  imgIndex: number;
+  setImgIndex: (fn: (i: number) => number) => void;
+}) {
   const prevImg = (e: React.MouseEvent) => {
     e.stopPropagation();
     setImgIndex(i => (i - 1 + project.screenshots.length) % project.screenshots.length);
@@ -122,19 +131,142 @@ function ProjectCard({ project, index }: { project: typeof projects[0]; index: n
 
   return (
     <motion.div
+      initial={{ opacity: 0, y: "100%" }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: "100%" }}
+      transition={{ duration: 0.38, ease: [0.16, 1, 0.3, 1] }}
+      className="absolute inset-0 flex flex-col"
+      style={{
+        background: project.highlight ? "rgba(12,8,4,0.96)" : "rgba(24,15,6,0.95)",
+        backdropFilter: "blur(2px)",
+      }}
+    >
+      {/* Top label + dots */}
+      <div className="flex items-center justify-between px-5 pt-5 pb-3 flex-shrink-0">
+        <span
+          className="text-white/50 uppercase tracking-widest"
+          style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "0.6rem", letterSpacing: "0.18em" }}
+        >
+          Preview
+        </span>
+        {project.screenshots.length > 1 && (
+          <div className="flex items-center gap-1">
+            {project.screenshots.map((_, i) => (
+              <div
+                key={i}
+                className="rounded-full transition-all"
+                style={{
+                  width: i === imgIndex ? "16px" : "5px",
+                  height: "5px",
+                  background: i === imgIndex ? project.color : "rgba(255,255,255,0.25)",
+                }}
+              />
+            ))}
+          </div>
+        )}
+      </div>
+
+      {/* Screenshot */}
+      <div className="flex-1 px-5 min-h-0">
+        <BrowserChrome>
+          <div className="relative overflow-hidden" style={{ height: "160px" }}>
+            <AnimatePresence mode="wait">
+              <motion.img
+                key={imgIndex}
+                src={project.screenshots[imgIndex]}
+                alt={`${project.title} screenshot ${imgIndex + 1}`}
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -20 }}
+                transition={{ duration: 0.22 }}
+                className="w-full h-full object-cover"
+              />
+            </AnimatePresence>
+            {project.screenshots.length > 1 && (
+              <>
+                <button
+                  onClick={prevImg}
+                  className="absolute left-2 top-1/2 -translate-y-1/2 w-7 h-7 rounded-full flex items-center justify-center"
+                  style={{ background: "rgba(0,0,0,0.45)", backdropFilter: "blur(4px)" }}
+                >
+                  <ChevronLeft size={14} color="white" />
+                </button>
+                <button
+                  onClick={nextImg}
+                  className="absolute right-2 top-1/2 -translate-y-1/2 w-7 h-7 rounded-full flex items-center justify-center"
+                  style={{ background: "rgba(0,0,0,0.45)", backdropFilter: "blur(4px)" }}
+                >
+                  <ChevronRight size={14} color="white" />
+                </button>
+              </>
+            )}
+          </div>
+        </BrowserChrome>
+      </div>
+
+      {/* Bottom: title + visit */}
+      <div className="px-5 pt-4 pb-5 flex items-center justify-between flex-shrink-0">
+        <div>
+          <div
+            className="text-white"
+            style={{ fontFamily: "'Playfair Display', serif", fontWeight: 700, fontSize: "1rem", fontStyle: "italic" }}
+          >
+            {project.title}
+          </div>
+          <div
+            className="text-white/40 mt-0.5"
+            style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "0.7rem" }}
+          >
+            {project.category}
+          </div>
+        </div>
+        <a
+          href={project.url}
+          target="_blank"
+          rel="noopener noreferrer"
+          onClick={e => e.stopPropagation()}
+          className="flex items-center gap-2 rounded-full px-4 py-2 transition-opacity hover:opacity-80 active:opacity-60"
+          style={{
+            background: project.color,
+            fontFamily: "'DM Sans', sans-serif",
+            fontSize: "0.75rem",
+            fontWeight: 500,
+            color: "white",
+          }}
+        >
+          Visit
+          <ExternalLink size={12} />
+        </a>
+      </div>
+    </motion.div>
+  );
+}
+
+function ProjectCard({ project, index, canHover }: { project: typeof projects[0]; index: number; canHover: boolean }) {
+  const [open, setOpen] = useState(false);
+  const [imgIndex, setImgIndex] = useState(0);
+  const hasScreenshots = project.screenshots.length > 0;
+
+  const handleMouseEnter = () => { if (canHover && hasScreenshots) setOpen(true); };
+  const handleMouseLeave = () => { if (canHover) { setOpen(false); setImgIndex(0); } };
+  const handleClick = () => { if (!canHover && hasScreenshots) { setOpen(o => !o); if (open) setImgIndex(0); } };
+
+  return (
+    <motion.div
       initial={{ opacity: 0, y: 40 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={{ delay: index * 0.12, duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => { setHovered(false); setImgIndex(0); }}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+      onClick={handleClick}
       className="rounded-3xl overflow-hidden relative"
       style={{
         background: project.highlight ? "var(--foreground)" : "var(--card)",
         transition: "transform 0.35s cubic-bezier(0.16,1,0.3,1), box-shadow 0.35s ease",
-        transform: hovered ? "translateY(-6px)" : "translateY(0)",
-        boxShadow: hovered ? "0 24px 64px rgba(0,0,0,0.15)" : "0 2px 8px rgba(0,0,0,0.05)",
-        cursor: "default",
+        transform: open ? "translateY(-6px)" : "translateY(0)",
+        boxShadow: open ? "0 24px 64px rgba(0,0,0,0.15)" : "0 2px 8px rgba(0,0,0,0.05)",
+        cursor: hasScreenshots ? (canHover ? "default" : "pointer") : "default",
       }}
     >
       {/* Folder tab bar */}
@@ -184,7 +316,6 @@ function ProjectCard({ project, index }: { project: typeof projects[0]; index: n
         >
           {project.description}
         </p>
-
         <div className="flex flex-wrap gap-1.5">
           {project.tech.map(t => (
             <span
@@ -201,123 +332,31 @@ function ProjectCard({ project, index }: { project: typeof projects[0]; index: n
             </span>
           ))}
         </div>
-      </div>
 
-      {/* Screenshot overlay on hover */}
-      <AnimatePresence>
-        {hovered && (
-          <motion.div
-            initial={{ opacity: 0, y: "100%" }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: "100%" }}
-            transition={{ duration: 0.38, ease: [0.16, 1, 0.3, 1] }}
-            className="absolute inset-0 flex flex-col"
+        {/* Tap hint — only on touch devices */}
+        {!canHover && hasScreenshots && (
+          <div
+            className="mt-4"
             style={{
-              background: project.highlight
-                ? "rgba(15,10,5,0.96)"
-                : "rgba(28,18,8,0.95)",
-              backdropFilter: "blur(2px)",
+              fontFamily: "'DM Sans', sans-serif",
+              fontSize: "0.7rem",
+              color: project.highlight ? "rgba(255,255,255,0.3)" : "var(--muted-foreground)",
+              opacity: 0.7,
             }}
           >
-            {/* Top: label */}
-            <div className="flex items-center justify-between px-5 pt-5 pb-3">
-              <span
-                className="text-white/50 uppercase tracking-widest"
-                style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "0.6rem", letterSpacing: "0.18em" }}
-              >
-                Preview
-              </span>
-              {project.screenshots.length > 1 && (
-                <div className="flex items-center gap-1">
-                  {project.screenshots.map((_, i) => (
-                    <div
-                      key={i}
-                      className="rounded-full transition-all"
-                      style={{
-                        width: i === imgIndex ? "16px" : "5px",
-                        height: "5px",
-                        background: i === imgIndex ? project.color : "rgba(255,255,255,0.25)",
-                      }}
-                    />
-                  ))}
-                </div>
-              )}
-            </div>
+            {open ? "Tap to close" : "Tap to preview"}
+          </div>
+        )}
+      </div>
 
-            {/* Screenshot in browser chrome */}
-            <div className="flex-1 px-5 relative">
-              <BrowserChrome>
-                <div className="relative overflow-hidden" style={{ height: "160px" }}>
-                  <AnimatePresence mode="wait">
-                    <motion.img
-                      key={imgIndex}
-                      src={project.screenshots[imgIndex]}
-                      alt={`${project.title} screenshot ${imgIndex + 1}`}
-                      initial={{ opacity: 0, x: 20 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      exit={{ opacity: 0, x: -20 }}
-                      transition={{ duration: 0.25 }}
-                      className="w-full h-full object-cover"
-                    />
-                  </AnimatePresence>
-                  {/* Prev/Next arrows */}
-                  {project.screenshots.length > 1 && (
-                    <>
-                      <button
-                        onClick={prevImg}
-                        className="absolute left-2 top-1/2 -translate-y-1/2 w-7 h-7 rounded-full flex items-center justify-center"
-                        style={{ background: "rgba(0,0,0,0.4)", backdropFilter: "blur(4px)" }}
-                      >
-                        <ChevronLeft size={14} color="white" />
-                      </button>
-                      <button
-                        onClick={nextImg}
-                        className="absolute right-2 top-1/2 -translate-y-1/2 w-7 h-7 rounded-full flex items-center justify-center"
-                        style={{ background: "rgba(0,0,0,0.4)", backdropFilter: "blur(4px)" }}
-                      >
-                        <ChevronRight size={14} color="white" />
-                      </button>
-                    </>
-                  )}
-                </div>
-              </BrowserChrome>
-            </div>
-
-            {/* Bottom: title + visit button */}
-            <div className="px-5 pt-4 pb-5 flex items-center justify-between">
-              <div>
-                <div
-                  className="text-white"
-                  style={{ fontFamily: "'Playfair Display', serif", fontWeight: 700, fontSize: "1rem", fontStyle: "italic" }}
-                >
-                  {project.title}
-                </div>
-                <div
-                  className="text-white/40 mt-0.5"
-                  style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "0.7rem" }}
-                >
-                  {project.category}
-                </div>
-              </div>
-              <a
-                href={project.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                onClick={e => e.stopPropagation()}
-                className="flex items-center gap-2 rounded-full px-4 py-2 transition-opacity hover:opacity-80"
-                style={{
-                  background: project.color,
-                  fontFamily: "'DM Sans', sans-serif",
-                  fontSize: "0.75rem",
-                  fontWeight: 500,
-                  color: "white",
-                }}
-              >
-                Visit
-                <ExternalLink size={12} />
-              </a>
-            </div>
-          </motion.div>
+      {/* Overlay — same for both hover and click, always inside the card */}
+      <AnimatePresence>
+        {open && hasScreenshots && (
+          <ScreenshotOverlay
+            project={project}
+            imgIndex={imgIndex}
+            setImgIndex={setImgIndex}
+          />
         )}
       </AnimatePresence>
     </motion.div>
@@ -325,6 +364,8 @@ function ProjectCard({ project, index }: { project: typeof projects[0]; index: n
 }
 
 export function ProjectsSection() {
+  const canHover = useHoverDevice();
+
   return (
     <section id="projects" className="py-32 px-6">
       <div className="max-w-6xl mx-auto">
@@ -344,7 +385,7 @@ export function ProjectsSection() {
           </span>
         </motion.div>
 
-        <div className="flex items-end justify-between mb-16">
+        <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-16 gap-4">
           <motion.h2
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -362,23 +403,23 @@ export function ProjectsSection() {
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
             transition={{ delay: 0.3, duration: 0.6 }}
-            className="hidden sm:flex items-center gap-2"
+            className="flex items-center gap-2"
           >
             <div
-              className="w-10 h-8 rounded-lg overflow-hidden"
+              className="w-10 h-8 rounded-lg overflow-hidden flex-shrink-0"
               style={{ background: "linear-gradient(160deg, #7FC0E8 0%, #4E8FC4 100%)" }}
             >
               <div className="h-2 w-full" style={{ background: "linear-gradient(90deg, #A8D4F0, #7BBDE6)" }} />
             </div>
             <span className="text-foreground/40" style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "0.75rem" }}>
-              {projects.length} projects · hover to preview
+              {projects.length} projects · {canHover ? "hover" : "tap"} to preview
             </span>
           </motion.div>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
           {projects.map((project, i) => (
-            <ProjectCard key={project.id} project={project} index={i} />
+            <ProjectCard key={project.id} project={project} index={i} canHover={canHover} />
           ))}
         </div>
       </div>

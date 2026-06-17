@@ -3,8 +3,8 @@ import { motion } from "motion/react";
 export function HeroSection() {
   return (
     <section className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden px-6 pt-16 pb-24">
-      {/* Scattered desktop icons */}
-      <div className="absolute inset-0 pointer-events-none select-none">
+      {/* Scattered desktop icons — hidden on mobile to avoid overlap */}
+      <div className="hidden sm:block absolute inset-0 pointer-events-none select-none">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -33,7 +33,7 @@ export function HeroSection() {
           initial={{ opacity: 0, rotate: -6 }}
           animate={{ opacity: 1, rotate: -6 }}
           transition={{ delay: 1.0, duration: 0.7 }}
-          className="absolute bottom-[28%] left-[5%]"
+          className="absolute top-[62%] left-[5%]"
         >
           <div className="bg-foreground/90 text-primary-foreground rounded-xl px-3 py-2 shadow-lg" style={{ fontFamily: "'DM Sans', sans-serif" }}>
             <div className="text-[9px] text-white/60 mb-0.5">2026 Edition</div>
@@ -45,7 +45,7 @@ export function HeroSection() {
           initial={{ opacity: 0, rotate: 4 }}
           animate={{ opacity: 1, rotate: 4 }}
           transition={{ delay: 1.1, duration: 0.7 }}
-          className="absolute bottom-[30%] right-[6%]"
+          className="absolute top-[60%] right-[6%]"
         >
           <div className="bg-primary rounded-xl px-3 py-2 shadow-lg" style={{ fontFamily: "'DM Sans', sans-serif" }}>
             <div className="text-[10px] text-white/80 mb-1">Skills</div>
@@ -109,7 +109,7 @@ export function HeroSection() {
                 fontFamily: "'DM Sans', sans-serif",
                 fontSize: "11px",
                 color: "rgba(255,255,255,0.7)",
-              }}>2026</div>
+              }}>2025</div>
             </div>
           </motion.div>
 
@@ -157,7 +157,7 @@ export function HeroSection() {
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.75, duration: 0.6 }}
-          className="mt-10 flex items-center justify-center gap-4"
+          className="mt-10 flex items-center justify-center gap-4 flex-wrap"
         >
           <a
             href="#projects"

@@ -3,8 +3,8 @@ import { Mail, Github, Linkedin, ArrowUpRight } from "lucide-react";
 
 const links = [
   { icon: Mail, label: "Email", value: "Joud.nbk@gmail.com", href: "mailto:Joud.nbk@gmail.com" },
-  { icon: Github, label: "GitHub", value: "github.com/joudnaif", href: "#" },
-  { icon: Linkedin, label: "LinkedIn", value: "https://www.linkedin.com/in/Joudbakarman", href: "#" },
+  { icon: Github, label: "GitHub", value: "github.com/joudnaif", href: "github.com/joudnaif" },
+  { icon: Linkedin, label: "LinkedIn", value: "https://www.linkedin.com/in/Joudbakarman", href: "https://www.linkedin.com/in/Joudbakarman" },
 ];
 
 export function ContactSection() {
