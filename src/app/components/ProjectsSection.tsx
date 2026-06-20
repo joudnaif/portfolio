@@ -62,7 +62,7 @@ const projects = [
     highlight: false,
     url: "images/IT481_paper.pdf",
     screenshots: [
-     "/images/Fridge1.png",
+      "/images/Fridge1.png",
       "/images/Fridge2.jpg",
     ],
   },
@@ -80,6 +80,51 @@ const projects = [
     screenshots: [
       "/images/Dep1.png",
       "/images/Dep2.png",
+    ],
+  },
+  {
+    id: 6,
+    title: "Smoke Detection & Environmental Monitoring",
+    category: "Big Data & Machine Learning",
+    year: "2025",
+    description:
+      "Developed a big data analytics and machine learning solution for smoke detection using IoT sensor data. Applied Apache Spark RDD and SQL operations, performed data preprocessing and feature selection, and trained a Decision Tree model achieving 95.9% classification accuracy for fire alarm prediction.",
+    tech: [
+      "Apache Spark",
+      "Scala",
+      "Machine Learning",
+      "Decision Tree",
+      "Big Data",
+      "Google Colab",
+      "Data Analysis"
+    ],
+    color: "#8C6F56",
+    highlight: false,
+    url: "/images/SmokeDetector.pdf",
+    screenshots: [
+      "/images/Smoke.png",
+    ],
+  },
+  {
+    id: 7,
+    title: "Journey to Discovery",
+    category: "Full Stack Web Development",
+    year: "2024",
+    description:
+      "Developed a full-stack travel platform where users can share travel experiences through posts and photos. Implemented user authentication, content creation, likes, comments, and database integration to support dynamic user interaction and content sharing.",
+    tech: [
+      "HTML",
+      "CSS",
+      "JavaScript",
+      "PHP",
+      "MySQL"
+    ],
+    color: "#B87A5A",
+    highlight: false,
+    url: "https://github.com/shahad0abd/Journey-to-Discovery",
+    screenshots: [
+      "/images/Journey1.png",
+      "/images/Journey2.png"
     ],
   },
 ];
@@ -205,7 +250,7 @@ function ScreenshotOverlay({
       </div>
 
       {/* Bottom: title + visit */}
-      <div className="px-5 pt-4 pb-5 flex items-center justify-between flex-shrink-0">
+      <div className="px-5 pt-4 pb-5 flex-shrink-0">
         <div>
           <div
             className="text-white"
@@ -220,23 +265,6 @@ function ScreenshotOverlay({
             {project.category}
           </div>
         </div>
-        <a
-          href={project.url}
-          target="_blank"
-          rel="noopener noreferrer"
-          onClick={e => e.stopPropagation()}
-          className="flex items-center gap-2 rounded-full px-4 py-2 transition-opacity hover:opacity-80 active:opacity-60"
-          style={{
-            background: project.color,
-            fontFamily: "'DM Sans', sans-serif",
-            fontSize: "0.75rem",
-            fontWeight: 500,
-            color: "white",
-          }}
-        >
-          Visit
-          <ExternalLink size={12} />
-        </a>
       </div>
     </motion.div>
   );
@@ -252,114 +280,136 @@ function ProjectCard({ project, index, canHover }: { project: typeof projects[0]
   const handleClick = () => { if (!canHover && hasScreenshots) { setOpen(o => !o); if (open) setImgIndex(0); } };
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 40 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      transition={{ delay: index * 0.12, duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-      onMouseEnter={handleMouseEnter}
-      onMouseLeave={handleMouseLeave}
-      onClick={handleClick}
-      className="rounded-3xl overflow-hidden relative"
-      style={{
-        background: project.highlight ? "var(--foreground)" : "var(--card)",
-        transition: "transform 0.35s cubic-bezier(0.16,1,0.3,1), box-shadow 0.35s ease",
-        transform: open ? "translateY(-6px)" : "translateY(0)",
-        boxShadow: open ? "0 24px 64px rgba(0,0,0,0.15)" : "0 2px 8px rgba(0,0,0,0.05)",
-        cursor: hasScreenshots ? (canHover ? "default" : "pointer") : "default",
-      }}
-    >
-      {/* Folder tab bar */}
-      <div className="relative h-14 flex items-end px-6" style={{ background: project.color }}>
-        <div
-          className="absolute top-0 left-6 w-16 h-4 rounded-t-lg"
-          style={{ background: project.color, filter: "brightness(1.2)" }}
-        />
-        <div className="flex items-center justify-between w-full pb-2">
-          <span
-            className="text-white/80 uppercase tracking-widest"
-            style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "0.6rem", letterSpacing: "0.18em" }}
-          >
-            {project.category}
-          </span>
-          <span
-            className="text-white/60"
-            style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "0.65rem" }}
-          >
-            {project.year}
-          </span>
-        </div>
-      </div>
-
-      {/* Card body */}
-      <div className="p-7">
-        <h3
-          className="mb-3"
-          style={{
-            fontFamily: "'Playfair Display', serif",
-            fontWeight: 700,
-            fontSize: "clamp(1.1rem, 2.2vw, 1.4rem)",
-            lineHeight: 1.25,
-            color: project.highlight ? "white" : "var(--foreground)",
-          }}
-        >
-          {project.title}
-        </h3>
-        <p
-          className="mb-5"
-          style={{
-            fontFamily: "'DM Sans', sans-serif",
-            fontSize: "0.875rem",
-            lineHeight: 1.7,
-            color: project.highlight ? "rgba(255,255,255,0.6)" : "var(--muted-foreground)",
-          }}
-        >
-          {project.description}
-        </p>
-        <div className="flex flex-wrap gap-1.5">
-          {project.tech.map(t => (
-            <span
-              key={t}
-              className="px-2.5 py-1 rounded-full"
-              style={{
-                background: project.highlight ? "rgba(255,255,255,0.1)" : "var(--background)",
-                fontFamily: "'DM Sans', sans-serif",
-                fontSize: "0.7rem",
-                color: project.highlight ? "rgba(255,255,255,0.75)" : "var(--muted-foreground)",
-              }}
-            >
-              {t}
-            </span>
-          ))}
-        </div>
-
-        {/* Tap hint — only on touch devices */}
-        {!canHover && hasScreenshots && (
+    <div>
+      <motion.div
+        initial={{ opacity: 0, y: 40 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ delay: index * 0.12, duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+        onMouseEnter={handleMouseEnter}
+        onMouseLeave={handleMouseLeave}
+        onClick={handleClick}
+        className="rounded-3xl overflow-hidden relative"
+        style={{
+          background: project.highlight ? "var(--foreground)" : "var(--card)",
+          transition: "transform 0.35s cubic-bezier(0.16,1,0.3,1), box-shadow 0.35s ease",
+          transform: open ? "translateY(-6px)" : "translateY(0)",
+          boxShadow: open ? "0 24px 64px rgba(0,0,0,0.15)" : "0 2px 8px rgba(0,0,0,0.05)",
+          cursor: hasScreenshots ? (canHover ? "default" : "pointer") : "default",
+        }}
+      >
+        {/* Folder tab bar */}
+        <div className="relative h-14 flex items-end px-6" style={{ background: project.color }}>
           <div
-            className="mt-4"
+            className="absolute top-0 left-6 w-16 h-4 rounded-t-lg"
+            style={{ background: project.color, filter: "brightness(1.2)" }}
+          />
+          <div className="flex items-center justify-between w-full pb-2">
+            <span
+              className="text-white/80 uppercase tracking-widest"
+              style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "0.6rem", letterSpacing: "0.18em" }}
+            >
+              {project.category}
+            </span>
+            <span
+              className="text-white/60"
+              style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "0.65rem" }}
+            >
+              {project.year}
+            </span>
+          </div>
+        </div>
+
+        {/* Card body */}
+        <div className="p-7 flex flex-col min-h-[340px]">
+          <h3
+            className="mb-3"
             style={{
-              fontFamily: "'DM Sans', sans-serif",
-              fontSize: "0.7rem",
-              color: project.highlight ? "rgba(255,255,255,0.3)" : "var(--muted-foreground)",
-              opacity: 0.7,
+              fontFamily: "'Playfair Display', serif",
+              fontWeight: 700,
+              fontSize: "clamp(1.1rem, 2.2vw, 1.4rem)",
+              lineHeight: 1.25,
+              color: project.highlight ? "white" : "var(--foreground)",
             }}
           >
-            {open ? "Tap to close" : "Tap to preview"}
+            {project.title}
+          </h3>
+          <p
+            className="mb-5"
+            style={{
+              fontFamily: "'DM Sans', sans-serif",
+              fontSize: "0.875rem",
+              lineHeight: 1.7,
+              color: project.highlight ? "rgba(255,255,255,0.6)" : "var(--muted-foreground)",
+            }}
+          >
+            {project.description}
+          </p>
+          <div className="flex flex-wrap gap-1.5 mt-auto">
+            {project.tech.map(t => (
+              <span
+                key={t}
+                className="px-2.5 py-1 rounded-full"
+                style={{
+                  background: project.highlight ? "rgba(255,255,255,0.1)" : "var(--background)",
+                  fontFamily: "'DM Sans', sans-serif",
+                  fontSize: "0.7rem",
+                  color: project.highlight ? "rgba(255,255,255,0.75)" : "var(--muted-foreground)",
+                }}
+              >
+                {t}
+              </span>
+            ))}
           </div>
-        )}
-      </div>
 
-      {/* Overlay — same for both hover and click, always inside the card */}
-      <AnimatePresence>
-        {open && hasScreenshots && (
-          <ScreenshotOverlay
-            project={project}
-            imgIndex={imgIndex}
-            setImgIndex={setImgIndex}
-          />
-        )}
-      </AnimatePresence>
-    </motion.div>
+          {/* Tap hint — only on touch devices */}
+          {!canHover && hasScreenshots && (
+            <div
+              className="mt-4"
+              style={{
+                fontFamily: "'DM Sans', sans-serif",
+                fontSize: "0.7rem",
+                color: project.highlight ? "rgba(255,255,255,0.3)" : "var(--muted-foreground)",
+                opacity: 0.7,
+              }}
+            >
+              {open ? "Tap to close" : "Tap to preview"}
+            </div>
+          )}
+        </div>
+
+        {/* Overlay — same for both hover and click, always inside the card */}
+        <AnimatePresence>
+          {open && hasScreenshots && (
+            <ScreenshotOverlay
+              project={project}
+              imgIndex={imgIndex}
+              setImgIndex={setImgIndex}
+            />
+          )}
+        </AnimatePresence>
+      </motion.div>
+
+      <div className="mt-3 flex justify-center">
+        <a
+          href={project.url}
+          target="_blank"
+          rel="noopener noreferrer"
+          onClick={(e) => e.stopPropagation()}
+          className="inline-flex items-center gap-2 rounded-full px-5 py-2.5 transition-opacity hover:opacity-80"
+          style={{
+            background: project.color,
+            color: "white",
+            fontFamily: "'DM Sans', sans-serif",
+            fontSize: "0.8rem",
+            fontWeight: 500,
+          }}
+        >
+          View Project
+          <ExternalLink size={14} />
+        </a>
+      </div>
+    </div>
   );
 }
 
