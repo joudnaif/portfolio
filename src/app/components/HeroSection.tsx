@@ -2,7 +2,8 @@ import { motion } from "motion/react";
 
 export function HeroSection() {
   return (
-    <section className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden px-6 pt-28 md:pt-16 pb-24">      {/* Scattered desktop icons — hidden on mobile to avoid overlap */}
+    <section className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden px-6 pt-16 pb-24">
+      {/* Scattered desktop icons — hidden on mobile to avoid overlap */}
       <div className="hidden sm:block absolute inset-0 pointer-events-none select-none">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -120,7 +121,7 @@ export function HeroSection() {
             style={{
               fontFamily: "'Playfair Display', serif",
               fontWeight: 900,
-              fontSize: "clamp(3.8rem, 13vw, 14rem)",
+              fontSize: "clamp(5rem, 16vw, 14rem)",
               lineHeight: 0.9,
               letterSpacing: "-0.03em",
               fontStyle: "italic",
