@@ -67,7 +67,7 @@ export function HeroSection() {
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
-          className="text-foreground/60 mb-2 tracking-widest uppercase"
+          className="relative z-20 text-foreground/60 mb-8 tracking-widest uppercase"
           style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "0.75rem", letterSpacing: "0.2em" }}
         >
           Welcome to my
@@ -136,7 +136,7 @@ export function HeroSection() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.55, duration: 0.7 }}
-          className="mt-10"
+          className="relative z-20 mt-16"
         >
           <div
             className="text-foreground"
@@ -157,7 +157,7 @@ export function HeroSection() {
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.75, duration: 0.6 }}
-          className="mt-10 flex items-center justify-center gap-4 flex-wrap"
+          className="relative z-20 mt-10 flex items-center justify-center gap-4 flex-wrap"
         >
           <a
             href="#projects"
