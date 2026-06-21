@@ -12,7 +12,7 @@ const courses = [
 ];
 
 const achievements = [
-  { label: "GPA", value: "4.75/5.0" },
+  { label: "GPA", value: "4.77/5.0" },
   { label: "Projects", value: "6+" },
   { label: "Research Published", value: "1" },
 ];
