@@ -67,6 +67,21 @@ const projects = [
     ],
   },
   {
+    id: 4,
+    title: "Smart Refrigerator Simulator",
+    category: "Cloud & IoT Simulation",
+    year: "2025",
+    description:
+      "Transformed a theoretical Smart Refrigerator system into a practical cloud-based simulator using Google Cloud Platform (GCP) services for real-time data processing, sensor data simulation, and system architecture validation.",
+    tech: ["GCP", "IoT Simulation", "Cloud Services", "Data Pipelines", "Python"],
+    color: "#C4B88A",
+    highlight: false,
+    url: "https://smart-refrigerator--joudnaaiif.replit.app",
+    screenshots: [
+      "/images/FridgeSimulator1.png",
+    ],
+  },
+  {
     id: 5,
     title: "Depression Prediction System",
     category: "AI & Machine Learning",
